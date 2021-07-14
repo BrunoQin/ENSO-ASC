@@ -1,7 +1,7 @@
 # ENSO-ASC 1.0.0
 rep DOI: 10.5281/zenodo.5081794
 
-This is the forecast model code accompanied by this paper.
+This is the forecast model code accompanied by [this paper](https://gmd.copernicus.org/preprints/gmd-2021-213/).
 
 This project is built and trained on Windows 10, with python3.6/3.7 and CUDA 10.0/11.0/11.2.
 
