@@ -21,7 +21,7 @@ Test:
 
 | dependency | version |
 | :-----: | :-----: |
-| basemap([windows](https://download.lfd.uci.edu/pythonlibs/t7epjj8p/basemap-1.2.1-cp36-cp36m-win_amd64.whl), [linux](https://github.com/matplotlib/basemap/releases/tag/v1.2.1rel)) | 1.2.1 |
+| basemap([windows](https://download.lfd.uci.edu/pythonlibs/t7epjj8p/basemap-1.2.1-cp36-cp36m-win_amd64.whl), [GNU/linux](https://github.com/matplotlib/basemap/releases/tag/v1.2.1rel)) | 1.2.1 |
 | cmaps | 1.0.0 |
 
 ### 1. Download climate dataset
@@ -29,9 +29,10 @@ Scripts in `./data` are prepared well for download data from [NOAA/CIRES Twentie
 ```
 python ./data/download_*_*.py
 ```
+The archieved dataset is in [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.5179867.svg)](https://doi.org/10.5281/zenodo.5179867)
 
 ### 2. Parse `.grib` to `.npz`
-The download files are in `grib` formats, because Windows doesn't support `pygrib`, I parse data on MacOS, use following commands to install `pygrib` and parse data on MacOS. Linux will be ok as well.
+The download files are in `grib` formats, because Windows doesn't support `pygrib`, I parse data on MacOS, use following commands to install `pygrib` and parse data on MacOS. GNU/Linux will be ok as well.
 ```
 conda install -c conda-forge pygrib
 python data/grib2npz.py
@@ -59,7 +60,7 @@ Windows:
 ```
 pip install basemap-1.2.1-cp36-cp36m-win_amd64.whl
 ```
-Linux:
+GNU/Linux:
 ```
 pip install --upgrade --user matplotlib numpy pyproj pyshp OWSLib Pillow
 sudo apt install libgeos-dev
