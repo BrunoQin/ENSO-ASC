@@ -31,12 +31,3 @@ if __name__ == '__main__':
     urls = get_url('http://data.remss.com/ccmp/v02.1.NRT//Y2021/M03/')
     for url in urls:
         print(url)
-    # for url in urls:
-    #     if url.endswith('/'):
-    #         continue
-    #     elif os.path.exists(str.split(url, '/')[-1]):
-    #         continue
-    #     else:
-    #         r = requests.get(url)
-    #         with open(str.split(url, '/')[-1], "wb") as fd:
-    #              fd.write(r.content)

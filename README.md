@@ -1,76 +1,59 @@
 # ENSO-ASC 1.0.0
 
-This project is built and trained on Windows 10, with python3.6/3.7 and CUDA 10.0/11.0/11.2.
+This is the code for this [paper](https://gmd.copernicus.org/preprints/gmd-2021-213) `https://doi.org/10.5194/gmd-2021-213`
+This project can be built and trained on Ubuntu 20.04.3 LTS, with python3.6/3.7 and CUDA 10.0/11.0/11.2.
 
 ### 0. Environment
-Preprocess:
+```
+conda create -n enso python=3.6
+source activate enso
 
-| dependency | version | dependency | version |
-| :-----: | :-----: | :-----: | :-----: |
-| pygrib | 2.0.4 | netCDF4 | 1.5.3 |
-
-Train:
-
-| dependency | version | dependency | version |
-| :-----: | :-----: | :-----: | :-----: |
-| tensorflow-gpu | 2.0.0 | numpy | 1.17.3 |
-| pandas | 0.25.3 | scikit-learn | 0.21.3 |
-| progress | 1.5 | loguru | 0.3.2 |
-
-Test:
-
-| dependency | version |
-| :-----: | :-----: |
-| basemap([windows](https://download.lfd.uci.edu/pythonlibs/t7epjj8p/basemap-1.2.1-cp36-cp36m-win_amd64.whl), [GNU/linux](https://github.com/matplotlib/basemap/releases/tag/v1.2.1rel)) | 1.2.1 |
-| cmaps | 1.0.0 |
+pip install tensorflow-gpu==2.0.0
+pip install netCDF4==1.5.3
+pip install pandas==0.25.3
+pip install scikit-learn==0.21.3
+pip install progress==1.5
+pip install loguru==0.3.2
+pip install cmaps
+pip install geos
+pip install pyproj
+conda install -c conda-forge basemap-data-hires=1.0.8.dev0
+conda install -c conda-forge pygrib
+```
 
 ### 1. Download climate dataset
-Scripts in `./data` are prepared well for download data from [NOAA/CIRES Twentieth Century Global Reanalysis Version 2c](https://rda.ucar.edu/datasets/ds131.2/index.html/), [Hadley Centre Global Sea Ice and Sea Surface Temperature (HadISST)](https://rda.ucar.edu/datasets/ds277.3/index.html), and [Remote Sensing System](http://www.remss.com/)
+Scripts in `./data/reanalysis_dataset/meta-data` and `./data/remote_sensing_dataset/meta-data` are prepared well for download data from [NOAA/CIRES Twentieth Century Global Reanalysis Version 2c](https://rda.ucar.edu/datasets/ds131.2/index.html/) and [Remote Sensing System](http://www.remss.com/). [Hadley Centre Global Sea Ice and Sea Surface Temperature (HadISST)](https://rda.ucar.edu/datasets/ds277.3/index.html) can be downloaded from website.
 ```
 python ./data/download_*_*.py
 ```
-The archieved dataset is in [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.5179867.svg)](https://doi.org/10.5281/zenodo.5179867)
+The archieved dataset is also in [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.5179867.svg)](https://doi.org/10.5281/zenodo.5179867)
 
-### 2. Parse `.grib` to `.npz`
-The download files are in `grib` formats, because Windows doesn't support `pygrib`, I parse data on MacOS, use following commands to install `pygrib` and parse data on MacOS. GNU/Linux will be ok as well.
+### 2. For the reanalysis dataset (only need to run once for the later transfer learning)
+Firstly, use the following commands to parse and parpare training data.
 ```
-conda install -c conda-forge pygrib
-python data/grib2npz.py
+python -m data.reanalysis_dataset.1_grib2npz
+python -m data.rereanalysis_dataset.2_interpolation
 ```
-The output files are in `./data/dataset/final`
+The output training data files are in `./data/reanalysis_dataset/final`
 
-### 3. Download the data for model
+Then, train the model:
 ```
-python -m data.prepare_*
+python -m data.preprocess_rereanalysis_transfer
+python -m train.train_multi_gpus [or] python -m train.train_single_gpu
+```
+### 3. For the remote sensing dataset (need to train for every month)
+Firstly, use the following commands to parse and parpare training data.
+```
+python -m data.remote_sensing_dataset.1_byte2npz
+python -m data.remote_sensing_dataset.2_nc2npz
+python -m data.rereanalysis_dataset.3_crop_region_and_fill_land
+```
+The output training data files are in `./data/remote_sensing_dataset/final`
+
+Then, train the model:
+```
+python -m data.preprocess_remote_sensing
+python -m train.train_multi_gpus [or] python -m train.train_single_gpu
 ```
 
-### 4. Train the model
-```
-python -m train.train_single_gpu
-```
-or
-```
-python -m train.train_multi_gpus
-```
-
-### 5. Test the model
-The output images depend on `matplotlib.basemap`.
-
-Windows:
-```
-pip install basemap-1.2.1-cp36-cp36m-win_amd64.whl
-```
-GNU/Linux:
-```
-pip install --upgrade --user matplotlib numpy pyproj pyshp OWSLib Pillow
-sudo apt install libgeos-dev
-pip install --user --upgrade basemap-1.2.1rel.tar.gz
-```
-Color bars on basemap depend on `cmaps`
-```
-pip install cmaps
-```
-Then run the test script:
-```
-python -m train.test_one_year
-```
+### 4. Monthly ENSO forecasting
