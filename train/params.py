@@ -10,7 +10,7 @@ flags.DEFINE_string("outputs_dir", "./outputs", "Path to test images.")
 flags.DEFINE_string("single_gpu_model_dir", "./checkpoints_single", "Path to save trained models.")
 flags.DEFINE_string("multi_gpus_model_dir", "./checkpoints_multi", "Path to save trained models.")
 flags.DEFINE_string("archive_model_dir", "./checkpoints_archive", "Path to save trained models.")
-flags.DEFINE_string("checkpoint_file", "forecast_18.h5", "Path to save trained models.")
+flags.DEFINE_string("checkpoint_file", "", "Path to save trained models.")
 
 # reanalysis dataset experiment
 flags.DEFINE_string("reanalysis_dataset_dir", "./data/reanalysis_dataset", "Path to save the origin data.")
@@ -30,7 +30,7 @@ flags.DEFINE_string("experiment_style", "original", "Path to save training logs.
 flags.DEFINE_string("logout_dir", "./results/materials", "Path to save training logs.")
 flags.DEFINE_integer("num_gpus", 2, "The numbers of GPUs for training.")
 flags.DEFINE_integer("sequence_length", 6, "Sequence lenghth for predicting.")
-flags.DEFINE_integer("lead_time", 18, "Lead time for predicting.")
+flags.DEFINE_integer("lead_time", 1, "Lead time for predicting.")
 flags.DEFINE_integer("batch_size", 2, "The batch size for training.")
 flags.DEFINE_float("learning_rate", 0.0001, "The learning rate for training.")
 flags.DEFINE_integer("num_epochs", 521, "Number of epochs to train for.")

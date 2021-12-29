@@ -9,6 +9,7 @@ from progress.bar import PixelBar
 from train.params import *
 
 dic = [f'{params.reanalysis_dataset_dir}/meta-data/cwat',
+<<<<<<< HEAD
        # f'{params.reanalysis_dataset_dir}/meta-data/cape',
        # f'{params.reanalysis_dataset_dir}/meta-data/cin',
        # f'{params.reanalysis_dataset_dir}/meta-data/pot',
@@ -16,6 +17,15 @@ dic = [f'{params.reanalysis_dataset_dir}/meta-data/cwat',
        f'{params.reanalysis_dataset_dir}/meta-data/pwat',
        f'{params.reanalysis_dataset_dir}/meta-data/rh',
        # f'{params.reanalysis_dataset_dir}/meta-data/tmp',
+=======
+       f'{params.reanalysis_dataset_dir}/meta-data/cape',
+       f'{params.reanalysis_dataset_dir}/meta-data/cin',
+       f'{params.reanalysis_dataset_dir}/meta-data/pot',
+       f'{params.reanalysis_dataset_dir}/meta-data/pres',
+       f'{params.reanalysis_dataset_dir}/meta-data/pwat',
+       f'{params.reanalysis_dataset_dir}/meta-data/rh',
+       f'{params.reanalysis_dataset_dir}/meta-data/tmp',
+>>>>>>> f7ecb30fc0fdf832d09341dc190354a4e4b53a1d
        f'{params.reanalysis_dataset_dir}/meta-data/uwind',
        f'{params.reanalysis_dataset_dir}/meta-data/vwind']
 final = params.reanalysis_npz_dir
