@@ -9,13 +9,14 @@ from train.params import *
 
 
 class Predict(object):
-    def __init__(self):
+    def __init__(self, lag_month):
         adj = pd.read_csv(f'{params.remote_sensing_dataset_dir}/adjacency.csv', header=None, sep=',').values
         adj = tf.constant(adj, dtype = tf.float32)
+        self.lag_month = lag_month
         self.model_factory = model_factory(adj, params.remote_sensing_variables)
 
     def predict(self, data):
-        self.model_factory.load_weights(f'{params.archive_model_dir}/{params.checkpoint_file}')
+        self.model_factory.load_weights(f'{params.archive_model_dir}/forecast_{self.lag_month}.h5')
         y_pred = self.model_factory.predict({
             'rain': data['rain'], 'cloud': data['cloud'],
             'vapor': data['vapor'], 'uwind': data['uwind'],
