@@ -28,7 +28,7 @@ if __name__ == '__main__':
     # http://data.remss.com/tmi/bmaps_v07.1/
     # http://data.remss.com/amsr2/bmaps_v08/
     # http://data.remss.com/ccmp/v02.1.NRT/
-    # urls = get_url('http://data.remss.com/amsr2/bmaps_v08/Y2022/M02/')
-    urls = get_url('http://data.remss.com/ccmp/v02.1.NRT/Y2022/M02/')
+    urls = get_url('http://data.remss.com/amsr2/bmaps_v08/Y2022/M03/')
+    # urls = get_url('http://data.remss.com/ccmp/v02.1.NRT/Y2022/M03/')
     for url in urls:
         print(url)
