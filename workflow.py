@@ -28,8 +28,11 @@ def write2File(filename, lag_month):
 def train(lag_month):
     if os.path.exists(f'./checkpoints_archive/forecast_{lag_month}.h5'):
         run_cmd(f'cp ./checkpoints_archive/forecast_{lag_month}.h5 ./checkpoints_multi/ckp_1.h5')
+        template = ("model-{:1.0f} copy success!")
     else:
         run_cmd('cp ./checkpoints_archive/base_model.h5 ./checkpoints_multi/ckp_1.h5')
+        template = ("model-{:1.0f} copy error!")
+    logger.info(template.format(lag_month))
     write2File('./train/params.py', lag_month)
     run_cmd('python -m data.preprocess_remote_sensing')
     run_cmd('python -m train.train_multi_gpus')
@@ -38,7 +41,7 @@ def update_model(lag_month):
     if os.path.exists(f'./checkpoints_multi/ckp_{params.num_epochs + 1}.h5'):
         run_cmd(f'mv ./checkpoints_multi/ckp_{params.num_epochs + 1}.h5 ./checkpoints_archive/forecast_{lag_month}.h5')
     else:
-        template = ("model-{:1.0f} training error!")
+        template = ("model-{:1.0f} updating error!")
         logger.info(template.format(lag_month))
 
 def clean(lag_month):

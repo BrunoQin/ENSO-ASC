@@ -1,5 +1,6 @@
 import os
 import numpy as np
+import netCDF4 as nc
 
 from data.remote_sensing_dataset.remss_averaged import REMSSaveraged
 from train.params import *
@@ -28,6 +29,34 @@ def cal_month_averaged(averaged_records, year, month):
             cloud.append(REMSSaveraged(record, missing=np.nan).variables['cloud'])
             rain.append(REMSSaveraged(record, missing=np.nan).variables['rain'])
             count += 1
+    sst = non_zero_mean(np.array(sst))
+    vapor = non_zero_mean(np.array(vapor))
+    cloud = non_zero_mean(np.array(cloud))
+    rain = non_zero_mean(np.array(rain))
+    print(f'year {year} month {month} done! {count} files are found and calculated!')
+    return sst, vapor, cloud, rain
+
+def cal_month_averaged_nc(averaged_records, year, month):
+    sst = []
+    vapor = []
+    cloud = []
+    rain = []
+    count = 0
+    for record in averaged_records:
+        print(record)
+        tem = np.array(nc.Dataset(record).variables['SST'])
+        tem[tem == -999.0] = np.nan
+        sst.append(tem)
+        tem = np.array(nc.Dataset(record).variables['water_vapor'])
+        tem[tem == -999.0] = np.nan
+        vapor.append(tem)
+        tem = np.array(nc.Dataset(record).variables['cloud_liquid_water'])
+        tem[tem == -999.0] = np.nan
+        cloud.append(tem)
+        tem = np.array(nc.Dataset(record).variables['rain_rate'])
+        tem[tem == -999.0] = np.nan
+        rain.append(tem)
+        count += 1
     sst = non_zero_mean(np.array(sst))
     vapor = non_zero_mean(np.array(vapor))
     cloud = non_zero_mean(np.array(cloud))
@@ -120,7 +149,10 @@ if __name__ == '__main__':
             averaged_records = []
             for record in os.listdir(f'./data/remote_sensing_dataset/meta-data/amsr/bmaps_v08/y{year}/m{str(j).rjust(2, "0")}/'):
                 averaged_records.append(f'./data/remote_sensing_dataset/meta-data/amsr/bmaps_v08/y{year}/m{str(j).rjust(2, "0")}/{record}')
-            sst, vapor, cloud, rain = cal_month_averaged(averaged_records, year, j)
+            if year == 2022 and j <= 9:
+                sst, vapor, cloud, rain = cal_month_averaged(averaged_records, year, j)
+            else:
+                sst, vapor, cloud, rain = cal_month_averaged_nc(averaged_records, year, j)
             sst_data.append(sst)
             vapor_data.append(vapor)
             cloud_data.append(cloud)

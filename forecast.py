@@ -60,7 +60,7 @@ if __name__ == '__main__':
     length = sst_origin.shape[0]
 
     result = []
-    for lag_month in range(1, 19):
+    for lag_month in range(1, 20):
         forecast_domain = range(length - params.sequence_length + 1 - lag_month, length - params.sequence_length + 1)
         x_in = []
         for m in forecast_domain:
@@ -79,9 +79,12 @@ if __name__ == '__main__':
             y_forecast.append(np.reshape(sst_scaler.inverse_transform(np.reshape(y_predict, (1, -1))), (320, 440)))
 
         nino3_4 = []
+        output = []
         for m in range(len(forecast_domain)):
             y_anomaly = y_forecast[m] - cli_mean[(forecast_domain[m] + params.sequence_length - 1 + params.lead_time) % 12]
+            output.append(y_anomaly)
             nino3_4.append(np.mean(y_anomaly[140:180, 120:320]))
+        np.savez(f'output-{lag_month}.npz', data=output)
 
         template = ("model-{:1.0f} forecasting success!")
         logger.info(template.format(lag_month))
